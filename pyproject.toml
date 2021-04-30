@@ -6,9 +6,9 @@ authors = ["Alex Angelico <alex.angelico@live.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
+pytest = "^6.2.3"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
