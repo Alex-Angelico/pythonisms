@@ -1,5 +1,5 @@
-# from data_classes.linked_list import LinkedList
-from pythonisms.pythonisms.data_classes.linked_list import LinkedList
+from data_classes.linked_list import LinkedList
+# from pythonisms.pythonisms.data_classes.linked_list import LinkedList
 
 class Hashtable:
     def __init__(self, size=1024):

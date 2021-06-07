@@ -12,11 +12,39 @@ from random import randint as random
 # remove the letter nearest the average in the string and attempt to fill the last two letters again
 # else, fill the last letter with the ascii value equivalent to the difference remaining between the sum limit and 0
 
-def gibberish_generator(word_count=int, sum_target=0):
+class CheaterContainer:
+    def __init__(self):
+        self.container = []
+
+    def append(self, item):
+        self.container.append(item)
+
+def bst_generator(root_value, levels=0, balance=bool):
+    pass
+
+def gibberish_generator(word_count: int, sum_target=0, letter_count_min=3, letter_count_max=8):
+    """Generator which produces a list of strings comprised of random letters. Yields can be generated in one of two modes:
+    
+    1. All strings will be mathematically equivalent in terms of the sum of the ascii values of their letters.
+    2. All strings will be of random length within a designated minimum and maximum range.
+
+    Args:
+        word_count (int): Number of words to be yielded.
+        sum_target (int, optional): Mathematical sum derived from the ascii values of a given sequence of letters. Defaults to 0.
+        letter_count_min (int, optional): Smallest possible number of letters in a randomly generated string. Defaults to 3.
+        letter_count_max (int, optional): Largest possible number of letters in a randomly generated string. Defaults to 8.
+
+    Raises:
+        ValueError: Returned if the sum_target argument provided to the function is too small to yield reliable output.
+
+    Yields:
+        Iterator[list]: A list of strings comprised of random letters.
+    """    
     i = 0
     if sum_target != 0 and sum_target < 200:
         raise ValueError(f'sum_target minimum value is 200; value provided was {sum_target}.')
     while i < word_count:
+        # WORD LENGTH RANDOMIZER
         ascii_limit, count = sum_target, 0
         if sum_target:
             ascii_average = random(81, 106)
@@ -25,8 +53,10 @@ def gibberish_generator(word_count=int, sum_target=0):
                 while sum_target / letter_count > 122: letter_count += 1
             if sum_target / letter_count < 65:
                 while sum_target / letter_count < 65: letter_count -= 1
-        else: letter_count = random(3, 8)
+        else: letter_count = random(letter_count_min, letter_count_max)
+        # WORD LENGTH RANDOMIZER
         word = letter_count * [None]
+        # HELPER FUNCTION TO REPLACE BAD LETTERS
         def letter_remover(boolean, index):
             nonlocal ascii_limit, count
             word_reference = word.copy()
@@ -36,15 +66,22 @@ def gibberish_generator(word_count=int, sum_target=0):
             word.remove(word_reference[index])
             word.append(None)
             ascii_limit, count = ascii_limit + ord(word_reference[index]), count - 1
+        # HELPER FUNCTION TO REPLACE BAD LETTERS
         while count < letter_count:
+            # RANDOM LETTER ADDING PROCESS
             if sum_target != 0 and letter_count - count == 1:
+                # CONDITIONAL HANDLING OF LAST LETTER IN WORD
                 if ascii_limit < 65: letter_remover(True, 0)
                 elif ascii_limit > 122: letter_remover(False, 0)
                 elif ascii_limit in range(91, 97): letter_remover(False, len(word) // 2)
                 else: word[count], count = chr(ascii_limit), count + 1
+                # CONDITIONAL HANDLING OF LAST LETTER IN WORD
             else:
+                # CONDITIONAL HANDLING OF NON-LAST LETTERS IN WORD
                 ascii_value = (random(97, 122) if random(0, 1) else random(65, 90))
                 ascii_limit, word[count], count = ascii_limit - ascii_value, chr(ascii_value), count + 1
+                # CONDITIONAL HANDLING OF NON-LAST LETTERS IN WORD
+            # RANDOM LETTER ADDING PROCESS
         yield ''.join(word)
         i += 1
 
